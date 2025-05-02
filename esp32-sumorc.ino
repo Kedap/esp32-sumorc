@@ -42,16 +42,20 @@ void processGamepad(ControllerPtr ctl) {
 
     // Mueve el robot hacia adelante o hacia atrás con el eje L
     if (speedL > 0) {
-        forward(motor1, motor2, speedL); // Moviendo hacia adelante
-    } else if (speedL < 0) {
         back(motor1, motor2, -speedL);   // Moviendo hacia atrás
+        Serial.println("Moviendo hacia atrás");
+    } else if (speedL < 0) {
+        forward(motor1, motor2, speedL); // Moviendo hacia adelante
+        Serial.println("Moviendo hacia adelante");
     }
 
     // Mueve el robot hacia la izquierda o derecha con el eje R
     if (speedR > 0) {
         right(motor1, motor2, speedR);  // Girar hacia la derecha
+        Serial.println("Girando hacia la derecha");
     } else if (speedR < 0) {
         left(motor1, motor2, -speedR);   // Girar hacia la izquierda
+        Serial.println("Girando hacia la izquierda");
     }
 }
 
