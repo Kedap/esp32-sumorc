@@ -37,25 +37,37 @@ void onDisconnectedController(ControllerPtr ctl) {
 }
 
 void processGamepad(ControllerPtr ctl) {
-    int speedL = ctl->axisY();  // Eje L (arriba y abajo)
-    int speedR = ctl->axisRX(); // Eje R (izquierda y derecha)
+    int speedL = ctl->axisY();   // Eje L: adelante/atrás
+    int speedR = ctl->axisRX();  // Eje R: izquierda/derecha
 
-    // Mueve el robot hacia adelante o hacia atrás con el eje L
-    if (speedL > 0) {
-        back(motor1, motor2, -speedL);   // Moviendo hacia atrás
-        Serial.println("Moviendo hacia atrás");
-    } else if (speedL < 0) {
-        forward(motor1, motor2, speedL); // Moviendo hacia adelante
-        Serial.println("Moviendo hacia adelante");
+    const int deadZone = 20;
+
+    // Eje L - Movimiento hacia adelante o atrás
+    if (abs(speedL) > deadZone) {
+        if (speedL > 0) {
+            back(motor1, motor2, -speedL);
+            Serial.println("Moviendo hacia atrás");
+        } else {
+            forward(motor1, motor2, speedL);
+            Serial.println("Moviendo hacia adelante");
+        }
+    } else {
+        // Si está en zona muerta, frenamos
+        brake(motor1, motor2);
+        Serial.println("En zona muerta (adelante/atrás) - frenando");
     }
 
-    // Mueve el robot hacia la izquierda o derecha con el eje R
-    if (speedR > 0) {
-        right(motor1, motor2, speedR);  // Girar hacia la derecha
-        Serial.println("Girando hacia la derecha");
-    } else if (speedR < 0) {
-        left(motor1, motor2, -speedR);   // Girar hacia la izquierda
-        Serial.println("Girando hacia la izquierda");
+    // Eje R - Giro a izquierda o derecha
+    if (abs(speedR) > deadZone) {
+        if (speedR > 0) {
+            right(motor1, motor2, speedR);
+            Serial.println("Girando hacia la derecha");
+        } else {
+            left(motor1, motor2, -speedR);
+            Serial.println("Girando hacia la izquierda");
+        }
+    } else {
+        Serial.println("En zona muerta (izquierda/derecha) - sin giro");
     }
 }
 
